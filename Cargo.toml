@@ -1,0 +1,35 @@
+[package]
+name = "rustbert_tokenizer"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rustbert_tokenizer"
+crate-type=["staticlib", "lib"]
+
+[examples]
+name = "demo_tokenizer"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# rust-bert = { version = "0.21.0", features = ["onnx"]}
+rust_tokenizers = "8.1.1"
+libc = "0.2.150"
+chrono = "0.4.31"
+
+[build-dependencies]
+cbindgen = "0.26.0"
+
+[profile.release]
+opt-level = 3
+debug = false
+split-debuginfo = '...'  # Platform-specific.
+strip = false
+debug-assertions = false
+overflow-checks = false
+lto = 'fat'
+panic = 'unwind'
+incremental = false
+codegen-units = 1
+rpath = false
