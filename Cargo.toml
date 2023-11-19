@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "rustbert_tokenizer"
-crate-type=["staticlib", "lib"]
+crate-type=["staticlib", "cdylib", "lib"]
 
 [examples]
 name = "demo_tokenizer"

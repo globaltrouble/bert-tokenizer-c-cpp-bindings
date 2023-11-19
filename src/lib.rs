@@ -10,9 +10,9 @@ static TOKENIZER: OnceLock<BertTokenizer> = OnceLock::new();
 
 #[repr(C)]
 pub enum BertTokenizerInitStatus {
-    OK = 0,
-    CanNotConvertVocabPath,
-    CanNotLoadVocab,
+    BertTokenizerInitStatusOK = 0,
+    BertTokenizerInitStatusCanNotConvertVocabPath,
+    BertTokenizerInitStatusCanNotLoadVocab,
 }
 
 #[no_mangle]
@@ -25,14 +25,14 @@ pub extern "C" fn bert_tokenizer_init(
     let vocab_str: &str = match vocab_c_str.to_str() {
         Ok(v) => v,
         Err(_) => {
-            return BertTokenizerInitStatus::CanNotConvertVocabPath;
+            return BertTokenizerInitStatus::BertTokenizerInitStatusCanNotConvertVocabPath;
         }
     };
 
     let vocab = match BertVocab::from_file(vocab_str) {
         Ok(v) => v,
         Err(_) => {
-            return BertTokenizerInitStatus::CanNotLoadVocab;
+            return BertTokenizerInitStatus::BertTokenizerInitStatusCanNotLoadVocab;
         }
     };
 
@@ -42,14 +42,14 @@ pub extern "C" fn bert_tokenizer_init(
         strip_accents,
     ));
 
-    return BertTokenizerInitStatus::OK;
+    return BertTokenizerInitStatus::BertTokenizerInitStatusOK;
 }
 
 #[repr(C)]
 pub enum BertTokenizerPreprocessingStatus {
-    OK = 0,
-    TokenizerWasNotInit,
-    CanNotConvertText,
+    BertTokenizerPreprocessingStatusOK = 0,
+    BertTokenizerPreprocessingStatusTokenizerWasNotInit,
+    BertTokenizerPreprocessingStatusCanNotConvertText,
 }
 
 #[no_mangle]
@@ -63,7 +63,7 @@ pub extern "C" fn bert_tokenizer_process(
     let tk = match TOKENIZER.get() {
         Some(v) => v,
         None => {
-            return BertTokenizerPreprocessingStatus::TokenizerWasNotInit;
+            return BertTokenizerPreprocessingStatus::BertTokenizerPreprocessingStatusTokenizerWasNotInit;
         }
     };
 
@@ -71,7 +71,7 @@ pub extern "C" fn bert_tokenizer_process(
     let str: &str = match c_str.to_str() {
         Ok(v) => v,
         Err(_) => {
-            return BertTokenizerPreprocessingStatus::CanNotConvertText;
+            return BertTokenizerPreprocessingStatus::BertTokenizerPreprocessingStatusCanNotConvertText;
         }
     };
 
@@ -110,5 +110,5 @@ pub extern "C" fn bert_tokenizer_process(
         unsafe { mask_dst.write(MASK_ATTENTION_OFF) };
     }
 
-    return BertTokenizerPreprocessingStatus::OK;
+    return BertTokenizerPreprocessingStatus::BertTokenizerPreprocessingStatusOK;
 }
